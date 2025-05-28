@@ -1,7 +1,7 @@
 import { Router as r } from "express";
 import { Todos } from "../models/todos.models.js";
 const router = r();
-router.get("/AllDoTo", async (req, res) => {
+router.get("/AllToDo", async (req, res) => {
   const todos = await Todos.find();
   res.json({
     Alltodos: todos,
@@ -27,15 +27,13 @@ router.post("/AllToDo",async(req,res)=>{
    if([todo].some((field)=>field.trim()==="")){
     throw new Error("Empty Field is not allowed.");
    }
-  await Todos.create(
+  const newTodo=await Todos.create(
     {
         todo:todo,Completed:Completed,isEditable:isEditable
     }
    )
    console.log(todo);
-   res.status(201).json({
-    message:"Successfully added."
-   })
+   res.status(201).json(newTodo);
 
     }
    catch(error){
@@ -45,3 +43,38 @@ router.post("/AllToDo",async(req,res)=>{
 
    }
 })
+
+router.put("/AllToDo/:id",async(req,res)=>{
+ const {todo } =req.body
+  try{
+    const updatedTodo=await Todos.findByIdAndUpdate(req.params.id,
+      {
+        todo
+      },{new:true}
+    );
+  if(!updatedTodo){
+    throw new Error("Todo not found!");
+  }
+  console.log(updatedTodo);
+  res.json(updatedTodo);
+  }catch(error){
+    console.log(error);
+  }
+})
+
+router.delete("/AllToDo/:id",async(req,res)=>{
+       try{
+        const deletedTodo=await Todos.findByIdAndDelete(req.params.id);
+       if(!deletedTodo){
+        res.json("Not found!");
+        throw new Error("No todo found!");
+       }
+       res.json(deletedTodo);
+       console.log(deletedTodo);
+      }
+      catch(error){
+        console.log(error);
+      }
+})
+
+export default router;
