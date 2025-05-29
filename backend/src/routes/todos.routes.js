@@ -45,11 +45,11 @@ router.post("/AllToDo",async(req,res)=>{
 })
 
 router.put("/AllToDo/:id",async(req,res)=>{
- const {todo } =req.body
+ const {todo ,Completed,isEditable} =req.body
   try{
     const updatedTodo=await Todos.findByIdAndUpdate(req.params.id,
       {
-        todo
+        todo,Completed,isEditable
       },{new:true}
     );
   if(!updatedTodo){
