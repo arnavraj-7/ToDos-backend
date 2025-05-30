@@ -5,7 +5,10 @@ import cors from 'cors'
 import todosRoutes from './routes/todos.routes.js'; 
 dotenv.config();
 const app=express();
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true,
+}));
 app.use(express.json());
 app.use('/api/todos', todosRoutes);
 const PORT=process.env.PORT || 5000;
